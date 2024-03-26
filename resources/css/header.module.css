@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css?family=Work+Sans:400,600");
+
+/* ? ------------header------------ */
+body {
+    margin: 0;
+    background: #f8f9fa;
+    font-family: "Work Sans", sans-serif;
+    font-weight: 100;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+header {
+    background: #eff0f3;
+    box-shadow: 5px 6px 5px 1px rgba(88, 83, 83, 0);
+    padding-bottom: 20px;
+}
+
+nav li {
+    display: inline-block;
+    padding-top: 22px;
+    position: relative;
+    margin-left: 20px;
+}
+
+header::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+nav {
+    float: right;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    user-select: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+nav a button {
+    color: #444;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    padding: 10px 0;
+    display: inline-block;
+}
+
+nav a :hover {
+    color: #1d68d1;
+}
+
+nav a::before {
+    content: "";
+    display: block;
+    height: 5px;
+    background-color: rgb(116, 111, 111);
+    position: absolute;
+    top: 0;
+    width: 0%;
+    transition: all ease-in-out 250ms;
+}
+
+nav a:hover::before {
+    width: 100%;
+}
+
+.logo {
+    width: 45px;
+    user-select: none;
+    float: left;
+    padding: 10px 0;
+}
+
+@media (max-width: 800px) {
+    .container {
+        width: 90%;
+    }
+
+    nav {
+        float: none;
+        text-align: center;
+        margin-top: 1px;
+    }
+
+    nav ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav li {
+        margin: -3px 0;
+        margin-left: 0;
+    }
+}
