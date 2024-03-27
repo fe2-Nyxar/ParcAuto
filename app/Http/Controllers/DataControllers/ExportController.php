@@ -5,17 +5,14 @@ namespace App\Http\Controllers\DataControllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use spatie\SimpleExcel\SimpleExcelWriter;
-use App\Models\Accidents;
-use App\Models\CarAssignments;
-use App\Models\Cars;
+use App\Models\Accident;
+use App\Models\CarAssignment;
+use App\Models\Car;
 use App\Models\User;
-use App\Models\Fuels;
-use App\Models\Inspections;
+use App\Models\Fuel;
+use App\Models\Inspection;
 use App\Models\Maintenance;
-use Illuminate\Support\Facades\Storage;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Illuminate\Support\Facades\Response;
 
 class ExportController extends Controller
 {
@@ -23,62 +20,214 @@ class ExportController extends Controller
     {
         return Inertia::render("Data/Export");
     }
-    public function exportCarsTable()
+    protected function generateCsvByID($table)
     {
+        if ($table === "user") {
+
+            $users = User::query()->where("isboss", true);
+            if ($users->count() === 0) {
+                return [];
+            }
+            $rows = [];
+            User::query()
+                ->lazyById(2000, 'id')
+                ->each(function ($user) use (&$rows) {
+                    $rows[] = $user->toArray();
+                });
+            return $rows;
+        } elseif ($table === "accident") {
+            $accidents = Accident::query();
+            if ($accidents->count() === 0) {
+                return [];
+            }
+            $rows = [];
+            $accidents
+                ->lazyById(2000, 'id')
+                ->each(function ($accident) use (&$rows) {
+                    $rows[] = $accident->toArray();
+                });
+            return $rows;
+        } elseif ($table === "maintenance") {
+            $maintenances = Maintenance::query();
+            if ($maintenances->count() === 0) {
+                return [];
+            }
+            $rows = [];
+            $maintenances
+                ->lazyById(2000, 'id')
+                ->each(function ($maintenance) use (&$rows) {
+                    $rows[] = $maintenance->toArray();
+                });
+            return $rows;
+        } elseif ($table === "fuel") {
+            $fuels = Fuel::query();
+            if ($fuels->count() === 0) {
+                return [];
+            }
+            $rows = [];
+            $fuels
+                ->lazyById(2000, 'id')
+                ->each(function ($fuel) use (&$rows) {
+                    $rows[] = $fuel->toArray();
+                });
+            return $rows;
+        } elseif ($table === "inspection") {
+            $inspections = Inspection::query();
+            if ($inspections->count() === 0) {
+                return [];
+            }
+            $rows = [];
+            $inspections
+                ->lazyById(2000, 'id')
+                ->each(function ($inspection) use (&$rows) {
+                    $rows[] = $inspection->toArray();
+                });
+            return $rows;
+        } elseif ($table === "carAssignment") {
+            $carAssignments = CarAssignment::query();
+            if ($carAssignments->count() === 0) {
+                return [];
+            }
+            $rows = [];
+            $carAssignments
+                ->lazyById(2000, 'id')
+                ->each(function ($carAssignment) use (&$rows) {
+                    $rows[] = $carAssignment->toArray();
+                });
+            return $rows;
+        } else {
+            return $this->Index();
+        }
     }
-    // public function exportUserTable()
-    // {
-    //     $handle = fopen(public_path('export.csv'), 'w');
-
-    //     User::where('isboss', true)->lazyById(2000, 'id')
-    //         ->each(function ($user) use ($handle) {
-    //             fputcsv($handle, $user->toArray());
-    //         });
-
-    //     fclose($handle);
-    //     return Storage::download('/public/export.csv');
-    // }
-
-    protected function usersGenerator()
+    public function generateCsvByChunks()
     {
-        $users = User::query()
-            ->where("isboss", true);
-        if ($users->count() === 0) {
-            return;
+
+
+        $cars = Car::query();
+        if ($cars->count() === 0) {
+            return null;
         }
         $chunks_per_loop = 3000;
-        $user_count = (clone $users)->count();
-        $chunks = (int) ceil(($user_count / $chunks_per_loop));
+        $car_count = (clone $cars)->count();
+        $chunks = (int) ceil(($car_count / $chunks_per_loop));
 
         for ($i = 0; $i < $chunks; $i++) {
-            $clonedUser = (clone $users)->skip($i * $chunks_per_loop)
+            $clonedCar = (clone $cars)->skip($i * $chunks_per_loop)
                 ->take($chunks_per_loop)
                 ->cursor();
 
-            foreach ($clonedUser as $user) {
-                yield $user;
+            foreach ($clonedCar as $car) {
+                yield $car;
             }
         }
     }
 
-    public function exportUserTable()
+    public function exportUserTable(Request $request)
     {
-        $filename = 'storage/export.csv';
-        $path = Storage::path('public/exports');
-        (new FastExcel($this->usersGenerator()))->export($path . "export.csv");
-        return Response::download($path);
+        $validatedTable = $request->validate([
+            'fileToExport' => "required|in:user"
+        ]);
+
+        $table = $validatedTable['fileToExport'];
+        $rows = $this->generateCsvByID($table);
+        if (empty($rows)) {
+            return Inertia::render("Data/Export");
+        }
+
+        $file = storage_path('app/public/exports/users.csv');
+
+        // Export the file
+        (new FastExcel($rows))->export($file);
+        return response()->download($file);
     }
 
-    public function exportAccidentsTable()
+    public function exportCarsTable(Request $request)
     {
+        $request->validate([
+            'fileToExport' => "required|in:car"
+        ]);
+        $file = storage_path('app/public/exports/cars.csv');
+        $generator = $this->generateCsvByChunks();
+        (new FastExcel($generator))->export($file);
+        $publicUrl = asset("storage/exports/cars.csv");
+        return Inertia::location($publicUrl);
     }
-    public function exportFuelsTable()
+
+
+
+    public function exportAccidentsTable(Request $request)
     {
+        $validatedTable = $request->validate([
+            'fileToExport' => "required|in:accident"
+        ]);
+        $table = $validatedTable['fileToExport'];
+        $rows = $this->generateCsvByID($table);
+        if (empty($rows)) {
+            return Inertia::render("Data/Export");
+        }
+        $file = storage_path('app/public/exports/accidents.csv');
+        (new FastExcel($rows))->export($file);
+        $publicUrl = asset("storage/exports/accidents.csv");
+        return Inertia::location($publicUrl);
     }
-    public function exportMaintenanceTable()
+    public function exportFuelsTable(Request $request)
     {
+        $validatedTable = $request->validate([
+            'fileToExport' => "required|in:fuel"
+        ]);
+        $table = $validatedTable['fileToExport'];
+        $rows = $this->generateCsvByID($table);
+        if (empty($rows)) {
+            return Inertia::render("Data/Export");
+        }
+        $file = storage_path('app/public/exports/fuels.csv');
+        (new FastExcel($rows))->export($file);
+        $publicUrl = asset("storage/exports/fuels.csv");
+        return Inertia::location($publicUrl);
     }
-    public function exportInspectionTable()
+    public function exportMaintenanceTable(Request $request)
     {
+        $validatedTable = $request->validate([
+            'fileToExport' => "required|in:maintenance"
+        ]);
+        $table = $validatedTable['fileToExport'];
+        $rows = $this->generateCsvByID($table);
+        if (empty($rows)) {
+            return Inertia::render("Data/Export");
+        }
+        $file = storage_path('app/public/exports/maintenance.csv');
+        (new FastExcel($rows))->export($file);
+        $publicUrl = asset("storage/exports/maintenance.csv");
+        return Inertia::location($publicUrl);
+    }
+    public function exportInspectionTable(Request $request)
+    {
+        $validatedTable = $request->validate([
+            'fileToExport' => "required|in:inspection"
+        ]);
+        $table = $validatedTable['fileToExport'];
+        $rows = $this->generateCsvByID($table);
+        if (empty($rows)) {
+            return Inertia::render("Data/Export");
+        }
+        $file = storage_path('app/public/exports/inspection.csv');
+        (new FastExcel($rows))->export($file);
+        $publicUrl = asset("storage/exports/inspection.csv");
+        return Inertia::location($publicUrl);
+    }
+    public function exportCarAssignmentTable(Request $request)
+    {
+        $validatedTable = $request->validate([
+            'fileToExport' => "required|in:carAssignment"
+        ]);
+        $table = $validatedTable['fileToExport'];
+        $rows = $this->generateCsvByID($table);
+        if (empty($rows)) {
+            return Inertia::render("Data/Export");
+        }
+        $file = storage_path('app/public/exports/carAssignment.csv');
+        (new FastExcel($rows))->export($file);
+        $publicUrl = asset("storage/exports/carAssignment.csv");
+        return Inertia::location($publicUrl);
     }
 }

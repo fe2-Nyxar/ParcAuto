@@ -5,8 +5,9 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Head, useForm } from "@inertiajs/react";
-
-export default function ResetPassword({ token, email }) {
+import PasswordInput from "@/Components/PasswordInput";
+export default function ResetPassword({ token, email, isInputDisabled }) {
+    console.log(isInputDisabled);
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,
         email: email,
@@ -50,14 +51,12 @@ export default function ResetPassword({ token, email }) {
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
-                    <TextInput
+                    <PasswordInput
                         id="password"
-                        type="password"
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
-                        isFocused={true}
                         onChange={(e) => setData("password", e.target.value)}
                     />
 
@@ -70,8 +69,7 @@ export default function ResetPassword({ token, email }) {
                         value="Confirm Password"
                     />
 
-                    <TextInput
-                        type="password"
+                    <PasswordInput
                         id="password_confirmation"
                         name="password_confirmation"
                         value={data.password_confirmation}

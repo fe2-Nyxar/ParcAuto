@@ -5,6 +5,7 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
+import PasswordInput from "@/Components/PasswordInput";
 import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Login({ status, canResetPassword }) {
@@ -42,7 +43,7 @@ export default function Login({ status, canResetPassword }) {
                     <TextInput
                         id="email"
                         type="email"
-                        name="emil"
+                        name="email"
                         value={data.email}
                         className="mt-1 block w-full"
                         autoComplete="username"
@@ -55,9 +56,9 @@ export default function Login({ status, canResetPassword }) {
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
-                    <TextInput
+                    <PasswordInput
                         id="password"
-                        type="password"
+                        hide="true"
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"

@@ -3,7 +3,7 @@ import DeleteUserForm from "./Partials/DeleteUserForm";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
 import { Head } from "@inertiajs/react";
-
+import CustomizableLink from "@/Components/CustomizableLink";
 export default function Edit({ auth, mustVerifyEmail, status }) {
     return (
         <AuthenticatedLayout
@@ -18,6 +18,15 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                    {!mustVerifyEmail && (
+                        <CustomizableLink
+                            href="/verify-email"
+                            className="text-green-500 border border-green-500 hover:bg-green-500 hover:text-white py-2 px-4 rounded inline-block transition duration-300"
+                        >
+                            Verify email
+                        </CustomizableLink>
+                    )}
+
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
@@ -29,7 +38,6 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <UpdatePasswordForm className="max-w-xl" />
                     </div>
-
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <DeleteUserForm className="max-w-xl" />
                     </div>

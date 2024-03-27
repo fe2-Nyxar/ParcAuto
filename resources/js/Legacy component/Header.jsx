@@ -79,7 +79,7 @@ export default function Header() {
                                     ></g>
                                     <g
                                         id="SVGRepo_tracerCarrier"
-                                        strokelinecap="round"
+                                        strokeLinecap="round"
                                         strokelinejoin="round"
                                     ></g>
                                     <g id="SVGRepo_iconCarrier">

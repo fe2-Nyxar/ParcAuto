@@ -4,41 +4,18 @@ import { ExportButton } from "@/Components/ExportButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
 export default function Export({ auth }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         fileToExport: "",
     });
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!data.fileToExport) {
+            setData("fileToExport", "");
             return;
         } else {
-            let url;
-            switch (data.fileToExport) {
-                case "car":
-                    url = "/car";
-                    break;
-                case "user":
-                    url = "/user";
-                    break;
-                case "carAssignment":
-                    url = "/carAssignment";
-                    break;
-                case "fuel":
-                    url = "/fuel";
-                    break;
-                case "Inspection":
-                    url = "/inspection";
-                    break;
-                case "Accident":
-                    url = "/accident";
-                    break;
-                case "Maintenance":
-                    url = "/maintenance";
-                    break;
-                default:
-                    return;
-            }
-            const fullUrl = `/Export${url}`;
+            let url = data.fileToExport;
+
+            const fullUrl = `/export/${url}`;
             post(fullUrl);
         }
     };
@@ -66,9 +43,9 @@ export default function Export({ auth }) {
                         <option value={"user"}>users</option>
                         <option value={"carAssignment"}>car Assignment</option>
                         <option value={"fuel"}>fuel</option>
-                        <option value={"Maintenance"}>Maintenance</option>
-                        <option value={"Inspection"}>Inspection</option>
-                        <option value={"Accident"}>Accident</option>
+                        <option value={"maintenance"}>Maintenance</option>
+                        <option value={"inspection"}>Inspection</option>
+                        <option value={"accident"}>Accident</option>
                     </select>
                     <InputError
                         message={errors.fileToExport}

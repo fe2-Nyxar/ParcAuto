@@ -195,7 +195,7 @@ const cardsData = {
 </svg>`,
         "go to Imports ",
         "here you can Import data from the database",
-        "/Import",
+        "/import",
     ],
     Exports: [
         `     <svg
@@ -221,6 +221,6 @@ const cardsData = {
 </svg>`,
         "go to Exports ",
         "here you can export data from the database",
-        "/Export",
+        "/export",
     ],
 };

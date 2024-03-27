@@ -4,6 +4,7 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
+import PasswordInput from "@/Components/PasswordInput";
 import { Head, Link, useForm } from "@inertiajs/react";
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -107,10 +108,8 @@ export default function Register() {
                 </div>
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
+                    <PasswordInput
                         id="password"
-                        type="password"
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"
@@ -126,9 +125,8 @@ export default function Register() {
                         value="Confirm Password"
                     />
 
-                    <TextInput
+                    <PasswordInput
                         id="password_confirmation"
-                        type="password"
                         name="password_confirmation"
                         value={data.password_confirmation}
                         className="mt-1 block w-full"

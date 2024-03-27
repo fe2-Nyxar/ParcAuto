@@ -14,7 +14,7 @@ use Inertia\Inertia;
 
 Route::redirect('/', '/dashboard');
 
-Route::prefix('/Export')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('/export')->middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/', [ExportController::class, 'index']);
     Route::post('/car', [ExportController::class, 'exportCarsTable']);
@@ -22,11 +22,10 @@ Route::prefix('/Export')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/user', [ExportController::class, 'exportUserTable']);
     Route::post('/fuel', [ExportController::class, 'exportFuelsTable']);
     Route::post('/maintenance', [ExportController::class, 'exportMaintenanceTable']);
-    Route::post('/maintenance', [ExportController::class, 'exportMaintenanceTable']);
     Route::post('/inspection', [ExportController::class, 'exportInspectionTable']);
     Route::post('/carAssignment', [ExportController::class, 'exportCarAssignmentTable']);
 });
-Route::prefix('/Import')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('/import')->middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/', [ImportController::class, 'index']);
     Route::post('/car', [ImportController::class, 'importCarsTable']);
@@ -35,10 +34,11 @@ Route::prefix('/Import')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/fuel', [ImportController::class, 'importFuelsTable']);
     Route::post('/maintenance', [ImportController::class, 'importMaintenanceTable']);
     Route::post('/inspection', [ImportController::class, 'importInspectionTable']);
+    Route::post('/carAssignment', [ExportController::class, 'importCarAssignmentTable']);
 });
 
-Route::get('/Accident', [AccidentController::class, 'index']);
-Route::get('/Cars', [CarsController::class, 'index']);
+Route::get('/accident', [AccidentController::class, 'index']);
+Route::get('cars', [CarsController::class, 'index']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
