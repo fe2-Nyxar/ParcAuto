@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="./public/icons/onee.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="./public/icons/onee.svg" height="500" width="400" alt="Laravel Logo"></a></p>
 
 ## About The project:
 
